@@ -375,20 +375,6 @@ https://vera-bot-b0um.onrender.com
 
 ---
 
-# Screenshots
-
-Add screenshots here before submission.
-
-Suggested screenshots:
-
-- ✅ Health Endpoint
-- ✅ Metadata Endpoint
-- ✅ Context Upload
-- ✅ Reply API
-- ✅ Tick API
-- ✅ Render Deployment
-
----
 
 # Design Decisions
 
