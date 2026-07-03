@@ -48,15 +48,22 @@ public class ReplyService {
                 request.getMessage()
         );
 
-        Map<String, Object> merchant =
-                contextStore.getContext(
-                        "merchant",
-                        request.getMerchantId()
-                );
+        Map<String, Object> merchant = null;
+
+        if (request.getMerchantId() != null &&
+                !request.getMerchantId().isBlank()) {
+
+            merchant = contextStore.getContext(
+                    "merchant",
+                    request.getMerchantId()
+            );
+        }
 
         Map<String, Object> category = null;
 
-        if (request.getCategoryId() != null) {
+        if (request.getCategoryId() != null &&
+                !request.getCategoryId().isBlank()) {
+
             category = contextStore.getContext(
                     "category",
                     request.getCategoryId()
@@ -65,7 +72,9 @@ public class ReplyService {
 
         Map<String, Object> customer = null;
 
-        if (request.getCustomerId() != null) {
+        if (request.getCustomerId() != null &&
+                !request.getCustomerId().isBlank()) {
+
             customer = contextStore.getContext(
                     "customer",
                     request.getCustomerId()
@@ -74,7 +83,9 @@ public class ReplyService {
 
         Map<String, Object> trigger = null;
 
-        if (request.getTriggerId() != null) {
+        if (request.getTriggerId() != null &&
+                !request.getTriggerId().isBlank()) {
+
             trigger = contextStore.getContext(
                     "trigger",
                     request.getTriggerId()

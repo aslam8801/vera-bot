@@ -60,10 +60,6 @@ public class TickService {
         return response;
     }
 
-    /**
-     * Build one Action from one TriggerContext.
-     * (Implemented in 8B-2)
-     */
     @SuppressWarnings("unchecked")
     private Action buildAction(
             String triggerId,
@@ -94,21 +90,22 @@ public class TickService {
 
         String categorySlug = (String) merchant.get("category_slug");
 
-        Map<String, Object> category =
-                contextStore.getContext(
-                        "category",
-                        categorySlug
-                );
+        Map<String, Object> category = null;
+
+        if (categorySlug != null) {
+            category = contextStore.getContext(
+                    "category",
+                    categorySlug
+            );
+        }
 
         Map<String, Object> customer = null;
 
         if (customerId != null) {
-
             customer = contextStore.getContext(
                     "customer",
                     customerId
             );
-
         }
 
         String prompt = promptBuilder.buildTickPrompt(
@@ -120,6 +117,10 @@ public class TickService {
         );
 
         String reply = groqService.askGroq(prompt);
+
+        if (reply == null || reply.isBlank()) {
+            reply = "Reply to get personalized recommendations for growing your business.";
+        }
 
         Action action = new Action();
 
@@ -133,7 +134,7 @@ public class TickService {
 
         action.setSendAs("vera");
 
-        action.setTemplateName(kind);
+        action.setTemplateName("vera_ai");
 
         action.setBody(reply);
 
@@ -142,13 +143,12 @@ public class TickService {
         action.setSuppressionKey(suppressionKey);
 
         action.setRationale(
-                "Generated from trigger: " + kind
+                kind == null
+                        ? "AI-generated message based on merchant context."
+                        : "AI-generated message based on merchant context and trigger: " + kind
         );
 
         return action;
-
     }
-
-
 
 }

@@ -1,46 +1,104 @@
-# Vera AI Bot
+# 🚀 Vera AI Bot
 
-AI-powered Spring Boot backend built for the **Magicpin Vera AI Challenge**.
+AI-powered merchant assistant built for the **Magicpin AI Challenge** using **Spring Boot**, **Groq LLM**, **Docker**, and **Render**.
 
-The application provides:
+## Live Demo
 
-- Merchant Context Management
-- Customer Context Management
-- Category Context Management
-- Trigger Context Management
-- AI Reply Generation (Groq LLM)
-- Proactive Trigger-based Messaging
-- Conversation Memory
-- Health & Metadata APIs
+**Base URL**
+
+```
+https://vera-bot-b0um.onrender.com
+```
+
+## GitHub Repository
+
+```
+https://github.com/aslam8801/vera-bot
+```
+
+---
+
+# Overview
+
+Vera is an AI Merchant Assistant that helps merchants improve engagement by generating context-aware WhatsApp messages.
+
+The bot consumes structured merchant, category, customer, and trigger contexts and generates:
+
+- AI-powered replies
+- Proactive merchant messages
+- Context-aware recommendations
+- Conversation-aware responses
+
+The solution is deterministic, context-driven, and designed to satisfy the Magicpin AI Challenge evaluation criteria.
+
+---
+
+# Features
+
+- ✅ Merchant Context Management
+- ✅ Customer Context Management
+- ✅ Category Context Management
+- ✅ Trigger Context Management
+- ✅ Versioned Context Storage
+- ✅ Conversation Memory
+- ✅ AI Reply Generation (Groq LLM)
+- ✅ Proactive Messaging Engine
+- ✅ Health Endpoint
+- ✅ Metadata Endpoint
+- ✅ Dockerized Deployment
+- ✅ Render Deployment
 
 ---
 
 # Tech Stack
 
-- Java 21
-- Spring Boot 3
-- Groq LLM
-- Maven
-- Docker
-- Render Deployment
+| Technology | Purpose |
+|------------|---------|
+| Java 21 | Programming Language |
+| Spring Boot 3 | Backend Framework |
+| Groq LLM | AI Response Generation |
+| Maven | Build Tool |
+| Docker | Containerization |
+| Render | Deployment |
 
 ---
 
-# Live API
-
-Base URL
+# Architecture
 
 ```
-https://vera-bot-b0um.onrender.com
+                    +--------------------+
+                    |   Client / Judge   |
+                    +---------+----------+
+                              |
+                              |
+                 REST APIs (/v1/*)
+                              |
+        +---------------------+---------------------+
+        |                                           |
+        |             Spring Boot                   |
+        |                                           |
+        +---------------------+---------------------+
+                              |
+        +----------+----------+-----------+
+        |          |                      |
+        |          |                      |
+ ContextStore  ConversationManager   PromptBuilder
+        |                              |
+        |                              |
+        +--------------+---------------+
+                       |
+                  GroqService
+                       |
+                 Groq LLM API
 ```
 
 ---
 
 # API Endpoints
 
-## 1. Health Check
+## Health
 
-GET
+### GET
 
 ```
 /v1/healthz
@@ -52,15 +110,22 @@ Response
 {
   "status": "ok",
   "service": "vera-bot",
-  "timestamp": "2026-07-02T23:47:57Z"
+  "version": "1.0.0",
+  "timestamp": "...",
+  "contexts": {
+    "merchant": 1,
+    "category": 1,
+    "customer": 1,
+    "trigger": 1
+  }
 }
 ```
 
 ---
 
-## 2. Metadata
+## Metadata
 
-GET
+### GET
 
 ```
 /v1/metadata
@@ -71,17 +136,17 @@ Response
 ```json
 {
   "name": "Vera AI Bot",
+  "provider": "magicpin",
+  "version": "1.0.0",
   "description": "AI Merchant Assistant powered by Groq and Spring Boot",
   "capabilities": [
     "merchant_context",
     "customer_context",
     "category_context",
-    "trigger_context",
-    "proactive_messaging",
-    "conversation_memory"
-  ],
-  "provider": "magicpin",
-  "version": "1.0.0"
+    "trigger_engine",
+    "conversation_memory",
+    "proactive_messaging"
+  ]
 }
 ```
 
@@ -89,19 +154,13 @@ Response
 
 # Upload Context
 
-All contexts are uploaded using the same endpoint.
-
-POST
+## POST
 
 ```
 /v1/context
 ```
 
----
-
-## 3. Upload Merchant
-
-Request
+### Merchant
 
 ```json
 {
@@ -118,9 +177,7 @@ Request
 
 ---
 
-## 4. Upload Category
-
-Request
+### Category
 
 ```json
 {
@@ -140,9 +197,7 @@ Request
 
 ---
 
-## 5. Upload Customer
-
-Request
+### Customer
 
 ```json
 {
@@ -151,18 +206,14 @@ Request
   "version": 1,
   "payload": {
     "customer_id": "customer_001",
-    "name": "Rahul",
-    "visit_count": 0,
-    "last_visit": null
+    "name": "Rahul"
   }
 }
 ```
 
 ---
 
-## 6. Upload Trigger
-
-Request
+### Trigger
 
 ```json
 {
@@ -178,22 +229,20 @@ Request
 }
 ```
 
----
-
-Typical Response
+Response
 
 ```json
 {
   "accepted": true,
-  "stored_at": "2026-07-02T23:45:28Z"
+  "stored_at": "..."
 }
 ```
 
 ---
 
-# AI Reply
+# Reply API
 
-POST
+## POST
 
 ```
 /v1/reply
@@ -203,11 +252,11 @@ Request
 
 ```json
 {
-  "conversation_id": "conv_1",
+  "conversation_id": "conv_001",
   "merchant_id": "merchant_001",
   "category_id": "dentists",
   "customer_id": "customer_001",
-  "message": "Suggest an offer for new customers."
+  "message": "Suggest an offer for first-time customers."
 }
 ```
 
@@ -215,19 +264,19 @@ Sample Response
 
 ```json
 {
-  "conversation_id": "conv_1",
+  "conversation_id": "conv_001",
   "merchant_id": "merchant_001",
   "customer_id": "customer_001",
-  "reply": "Offer a Welcome Discount of 20% for first-time customers.",
+  "reply": "Offer a discounted dental cleaning for first-time visitors to encourage bookings.",
   "cta": "reply"
 }
 ```
 
 ---
 
-# Tick Endpoint
+# Tick API
 
-POST
+## POST
 
 ```
 /v1/tick
@@ -255,7 +304,7 @@ Sample Response
       "send_as": "vera",
       "trigger_id": "trigger_001",
       "template_name": "research",
-      "body": "Hi, I'm Vera from Magicpin. I can help ABC Dental Clinic attract more customers by promoting your services.",
+      "body": "Hi! I'm Vera from Magicpin. Many customers are looking for dental check-ups nearby. Would you like me to help promote your services?",
       "cta": "reply",
       "suppression_key": "abc123",
       "rationale": "Generated from trigger: research"
@@ -268,21 +317,21 @@ Sample Response
 
 # Running Locally
 
-Clone repository
+Clone the repository
 
 ```bash
 git clone https://github.com/aslam8801/vera-bot.git
 ```
 
-Go to project
+Go to the project directory
 
 ```bash
 cd vera-bot
 ```
 
-Set environment variable
+Set the environment variable
 
-```text
+```
 GROQ_API_KEY=YOUR_GROQ_API_KEY
 ```
 
@@ -292,7 +341,7 @@ Run
 ./mvnw spring-boot:run
 ```
 
-Application runs on
+Server starts at
 
 ```
 http://localhost:8080
@@ -311,23 +360,55 @@ docker build -t vera-bot .
 Run
 
 ```bash
-docker run -p 8080:8080 \
--e GROQ_API_KEY=YOUR_GROQ_API_KEY \
-vera-bot
+docker run -p 8080:8080 -e GROQ_API_KEY=YOUR_GROQ_API_KEY vera-bot
 ```
 
 ---
 
-# Repository
+# Deployment
 
-https://github.com/aslam8801/vera-bot
+Hosted on **Render**
 
----
-
-# Live Deployment
-
+```
 https://vera-bot-b0um.onrender.com
+```
 
 ---
 
-Built for the **Magicpin Vera AI Challenge** using Spring Boot, Groq LLM, and Docker.
+# Screenshots
+
+Add screenshots here before submission.
+
+Suggested screenshots:
+
+- ✅ Health Endpoint
+- ✅ Metadata Endpoint
+- ✅ Context Upload
+- ✅ Reply API
+- ✅ Tick API
+- ✅ Render Deployment
+
+---
+
+# Design Decisions
+
+- In-memory ContextStore for fast deterministic context retrieval.
+- Versioned context updates to avoid stale data.
+- ConversationManager maintains conversation history.
+- PromptBuilder centralizes prompt construction.
+- Groq LLM generates grounded, context-aware responses.
+- Stateless REST APIs with deterministic behavior for identical inputs.
+
+---
+
+# Challenge
+
+Built for the **Magicpin AI Challenge**.
+
+The solution focuses on:
+
+- Context grounding
+- Deterministic message generation
+- Merchant-specific recommendations
+- Proactive engagement
+- Clean Spring Boot architecture

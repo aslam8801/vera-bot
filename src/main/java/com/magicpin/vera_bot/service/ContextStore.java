@@ -32,7 +32,7 @@ public class ContextStore {
     }
 
     /**
-     * category -> contextId -> ContextEntry
+     * scope -> contextId -> ContextEntry
      */
     private final ConcurrentHashMap<String,
             ConcurrentHashMap<String, ContextEntry>> store =
@@ -92,6 +92,10 @@ public class ContextStore {
             String contextId
     ) {
 
+        if (scope == null || contextId == null) {
+            return null;
+        }
+
         ConcurrentHashMap<String, ContextEntry> scopedStore =
                 store.get(scope);
 
@@ -115,6 +119,10 @@ public class ContextStore {
             String scope,
             String contextId
     ) {
+
+        if (scope == null || contextId == null) {
+            return null;
+        }
 
         ConcurrentHashMap<String, ContextEntry> scopedStore =
                 store.get(scope);
@@ -149,8 +157,8 @@ public class ContextStore {
     public Map<String, Integer> getContextCounts() {
 
         return Map.of(
-                "category", getScopeCount("category"),
                 "merchant", getScopeCount("merchant"),
+                "category", getScopeCount("category"),
                 "customer", getScopeCount("customer"),
                 "trigger", getScopeCount("trigger")
         );
@@ -189,12 +197,10 @@ public class ContextStore {
     }
 
     /**
-     * Clear memory
-     *
+     * Clear memory.
      * Useful during local testing.
      */
     public void clearAll() {
         store.clear();
     }
-
 }
