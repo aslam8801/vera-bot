@@ -370,7 +370,7 @@ docker run -p 8080:8080 -e GROQ_API_KEY=YOUR_GROQ_API_KEY vera-bot
 Hosted on **Render**
 
 ```
-https://vera-bot-b0um.onrender.com
+https://vera-bot-1-dwrb.onrender.com
 ```
 
 ---
